@@ -152,12 +152,30 @@ trailer.setAttribute("id", "movie-trailer");
 </script>
 
 <template>
+  <!-- use something like this to style the text, to have it out 
+  in the template so that it can be styled in the <style> below. Having it will also mean
+  the code is cleaned up to be vue. and that the refs have everything. 
+  UNDerstand the goal --> 
+
+  <!-- <div id="movieProfile">
+        <img id="poster" src="" ref="poster">
+        <h1 id="title" ref="title"></h1>
+        <h3 id="tagline" ref="tagline"></h3>
+        <h3 id="status" ref="status"></h3>
+        <p id="popularity" ref="popularity"></p>
+        <p id="voteAverage" ref="voteAverage"></p>
+        <p id="voteCount" ref="voteCount"></p>
+        <p id="budget" ref="budget"></p>
+        <p id="overview" ref="overview"></p>
+
+    </div> -->
+
+
   <h1 id="pagetitle">Movie Finder</h1>
     <p id="intro">See the drop down below to select a movie</p>
     <form>
       <label id="moviesdropdownlabel" for="moviesdropdown">Choose a movie: </label> 
       <select id="moviesdropdown" v-model="movies">
-        <!--use oppenheimer website as resference. want that cool background and flow type thing-->
         <option value="424139">Halloween</option>
         <option value="354912">Coco</option>
         <option value="458156">
