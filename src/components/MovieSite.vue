@@ -1,46 +1,55 @@
 <script setup>
-import { ref } from 'vue'
-import axios from "axios"
+import { ref } from "vue";
+import axios from "axios";
 
-// let movie = document.getElementById("moviesdropdown");
-// let chosenMovie = movie.value;
+// let movies;
+// let div;
+// let video ;
+// let removeFind;
+// let trailers ;
+// let title  ;
+// let poster ;
+// let overview ;
+// let releaseDate ;
+// let genre ;
+// let revenue ;
+// let budget;
+// let runtime ;
+// let tagline ;
+// let homepage ;
+// let ranking ;
+// let collection ;
+// let collectionPoster ;
+// let trailer ;
+
 let movies;
-let video;
-let div;
-let movieResponse;
-let removeFind;
-let trailers;
-let movieGenre;
-let movieBudget;
-let movieRevenue;
-let movieRuntime;
-let movieHomepage;
-let movieTagline;
-let movieCollection;
-let movieCollectionPoster;
-let title;
-let poster;
-let overview;
-let releaseDate;
-let genre;
-let revenue;
-let budget;
-let runtime;
-let tagline;
-let homepage;
-let ranking;
-let collection;
-let collectionPoster;
-let trailer;
+// let div = ref(null);
+let video = ref(null);
+// let removeFind = ref(null);
+let removeIf = ref(false);
+let trailers = ref(null);
+let title = ref(null);
+let poster = ref(null);
+let overview = ref(null);
+let releaseDate = ref(null);
+let genre = ref(null);
+let revenue = ref(null);
+let budget = ref(null);
+let runtime = ref(null);
+let tagline = ref(null);
+let homepage = ref(null);
+let ranking = ref(null);
+let collection = ref(null);
+let collectionPoster = ref(null);
+let trailer = ref(null);
+let collectionTF = ref(false);
 
 async function movieOutput() {
-  if (removeFind) {
-      div.remove();
-    }
 
-  div = document.createElement("div");
-  div.setAttribute("id", "remover");
-    document.body.append(div);
+  // div = document.createElement("div");
+  // div.setAttribute("id", "remover");
+  // document.body.append(div);
+  removeIf.value = true;
 
   video = await axios.get(`https://api.themoviedb.org/3/movie/${movies}`, {
     params: {
@@ -53,109 +62,85 @@ async function movieOutput() {
     (trailer) => trailer.type === "Trailer"
   );
 
-  movieGenre = video.data.genres[0].name;
-  movieBudget = video.data.budget;
-  movieRevenue = video.data.revenue;
-  movieRuntime = video.data.runtime;
-  movieHomepage = video.data.homepage;
-  movieTagline = video.data.tagline;
+  // title = document.createElement("h1");
+  // title.setAttribute("id", "movie-title");
+  // poster = document.createElement("img");
+  // poster.setAttribute("id", "movie-poster");
+  // overview = document.createElement("p");
+  // overview.setAttribute("id", "movie-overview");
+  // releaseDate = document.createElement("p");
+  // releaseDate.setAttribute("id", "movie-release-date");
+  // genre = document.createElement("p");
+  // genre.setAttribute("id", "movie-genre");
+  // revenue = document.createElement("p");
+  // revenue.setAttribute("id", "movie-revenue");
+  // budget = document.createElement("p");
+  // budget.setAttribute("id", "movie-budget");
+  // runtime = document.createElement("p");
+  // runtime.setAttribute("id", "movie-runtime");
+  // tagline = document.createElement("h2");
+  // tagline.setAttribute("id", "movie-tagline");
+  // homepage = document.createElement("a");
+  // homepage.setAttribute("id", "movie-homepage");
+  // homepage.setAttribute("target", "_blank");
+  // ranking = document.createElement("p");
+  // ranking.setAttribute("id", "movie-ranking");
+  // trailer = document.createElement("iframe");
+  // trailer.setAttribute("id", "movie-trailer");
 
-  title = document.createElement("h1");
-title.setAttribute("id", "movie-title");
+  title.value.innerHTML = `${video.data.title} `;
+  poster.value.src = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
+  overview.value.innerHTML = `Overview: ${video.data.overview}`;
+  releaseDate.value.innerHTML = `Release Date: ${video.data.release_date}`;
+  genre.value.innerHTML = `Genre: ${video.data.genres[0].name}`;
+  revenue.value.innerHTML = `Revenue: $${video.data.revenue}`;
+  budget.value.innerHTML = `Budget: $${video.data.budget}`;
+  runtime.value.innerHTML = `Movie Runtime: ${video.data.runtime} minutes`;
+  tagline.value.innerHTML = `${video.data.tagline}`;
+  homepage.value.href = `${video.data.homepage}`;
+  homepage.value.innerHTML = "Movie Homepage";
+  ranking.value.innerHTML = `Ranking: ${video.data.vote_average}/10`;
+  trailer.value.src = `https://www.youtube.com/embed/${trailers[0].key}`;
 
-  poster = document.createElement("img");
-poster.setAttribute("id", "movie-poster");
-  overview = document.createElement("p");
-overview.setAttribute("id", "movie-overview");
-  releaseDate = document.createElement("p");
-releaseDate.setAttribute("id", "movie-release-date");
-  genre = document.createElement("p");
-genre.setAttribute("id", "movie-genre");
-  revenue = document.createElement("p");
-revenue.setAttribute("id", "movie-revenue");
-  budget = document.createElement("p");
-budget.setAttribute("id", "movie-budget");
-  runtime = document.createElement("p");
-runtime.setAttribute("id", "movie-runtime");
-  tagline = document.createElement("h2");
-tagline.setAttribute("id", "movie-tagline");
-  homepage = document.createElement("a");
-homepage.setAttribute("id", "movie-homepage");
-homepage.setAttribute("target", "_blank");
-  ranking = document.createElement("p");
-ranking.setAttribute("id", "movie-ranking");
-  trailer = document.createElement("iframe");
-trailer.setAttribute("id", "movie-trailer");
-
-  title.innerHTML = `${video.data.title} `;
-  poster.src = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
-  overview.innerHTML = `Overview: ${video.data.overview}`;
-  releaseDate.innerHTML = `Release Date: ${video.data.release_date}`;
-  genre.innerHTML = `Genre: ${movieGenre}`;
-  revenue.innerHTML = `Revenue: $${movieRevenue}`;
-  budget.innerHTML = `Budget: $${movieBudget}`;
-  runtime.innerHTML = `Movie Runtime: ${movieRuntime} minutes`;
-  tagline.innerHTML = `${movieTagline}`;
-  homepage.href = `${movieHomepage}`;
-  homepage.innerHTML = "Movie Homepage";
-  ranking.innerHTML = `Ranking: ${video.data.vote_average}/10`;
-
-  trailer.src = `https://www.youtube.com/embed/${trailers[0].key}`;
-
-  div.append(title);
-  div.append(poster);
-  div.append(overview);
-  div.append(releaseDate);
-  div.append(genre);
-  div.append(revenue);
-  div.append(budget);
-  div.append(runtime);
-  div.append(tagline);
-  div.append(homepage);
-  div.append(ranking);
+  // div.append(title);
+  // div.append(poster);
+  // div.append(overview);
+  // div.append(releaseDate);
+  // div.append(genre);
+  // div.append(revenue);
+  // div.append(budget);
+  // div.append(runtime);
+  // div.append(tagline);
+  // div.append(homepage);
+  // div.append(ranking);
   if (video.data.belongs_to_collection) {
-    movieCollection = video.data.belongs_to_collection.name;
-    movieCollectionPoster = video.data.belongs_to_collection.poster_path;
 
-    collection = document.createElement("p");
-  collection.setAttribute("id", "movie-collection");
-    collectionPoster = document.createElement("img");
-  collectionPoster.setAttribute("id", "movie-collection-poster");
-    collection.innerHTML = `${movieCollection}`;
-    collectionPoster.src = `https://image.tmdb.org/t/p/w500${movieCollectionPoster}`;
-    div.append(collection);
-    div.append(collectionPoster);
+    collectionTF.value = true;
+
+    // collection = document.createElement("p");
+    // collection.setAttribute("id", "movie-collection");
+    // collectionPoster = document.createElement("img");
+    // collectionPoster.setAttribute("id", "movie-collection-poster");
+    collection.value.innerHTML = `${video.data.belongs_to_collection.name}`;
+    collectionPoster.value.src = `https://image.tmdb.org/t/p/w500${video.data.belongs_to_collection.poster_path}`;
+    // div.append(collection);
+    // div.append(collectionPoster);
   }
-  div.append(trailer);
+  // div.append(trailer);
 
-  removeFind = document.getElementById("remover");
+  // removeFind = document.getElementById("remover");
+
+
 }
-
-// const get = document.getElementById("get");
-  // get.addEventListener("click", async () => {
-  //   let chosenMovie = movie.value;
-
-  //   if (removeFind) {
-  //     div.remove();
-  //   }
-
-  //   div = document.createElement("div");
-  //   div.setAttribute("id", "remover");
-  //   document.body.append(div);
-
-  // movieOutput(chosenMovie);  //should eb 4 lines up
-
-  // pagetitle.setAttribute("class", "animate");
-
-  // });
-
 </script>
 
 <template>
+
   <!-- use something like this to style the text, to have it out 
   in the template so that it can be styled in the <style> below. Having it will also mean
   the code is cleaned up to be vue. and that the refs have everything. 
-  UNDerstand the goal --> 
+  UNDerstand the goal -->
+  <!--is the solution to use refs ( call it in the attributes) and then it'll update? only when get is pressed the info is updated-->
 
   <!-- <div id="movieProfile">
         <img id="poster" src="" ref="poster">
@@ -170,40 +155,59 @@ trailer.setAttribute("id", "movie-trailer");
 
     </div> -->
 
+<div id="main-div">
+
 
   <h1 id="pagetitle">Movie Finder</h1>
-    <p id="intro">See the drop down below to select a movie</p>
-    <form>
-      <label id="moviesdropdownlabel" for="moviesdropdown">Choose a movie: </label> 
-      <select id="moviesdropdown" v-model="movies">
-        <option value="424139">Halloween</option>
-        <option value="354912">Coco</option>
-        <option value="458156">
-          John Wick: Chapter 3 - Parabellum
-        </option>
-        <option value="146233">Prisoners</option>
-        <option value="399566">Godzilla vs. Kong</option>
-        <option value="72190">World War Z</option>
-        <option value="1422">The Departed</option>
-        <option value="12405">Slumdog Millionaire</option>
-        <option value="27205">Inception</option>
-        <option value="396371">Molly's Game</option>
-      </select>
-    </form>
-    <div class="alignbutton">
-      <button id="get" @click="movieOutput()">Get Movie!</button>
+  <p id="intro">See the drop down below to select a movie</p>
+  <form>
+    <label id="moviesdropdownlabel" for="moviesdropdown"
+      >Choose a movie:
+    </label>
+    <select id="moviesdropdown" v-model="movies">
+      <option value="424139">Halloween</option>
+      <option value="354912">Coco</option>
+      <option value="458156">John Wick: Chapter 3 - Parabellum</option>
+      <option value="146233">Prisoners</option>
+      <option value="399566">Godzilla vs. Kong</option>
+      <option value="72190">World War Z</option>
+      <option value="1422">The Departed</option>
+      <option value="12405">Slumdog Millionaire</option>
+      <option value="27205">Inception</option>
+      <option value="396371">Molly's Game</option>
+    </select>
+  </form>
+  <div class="alignbutton">
+    <button id="get" @click="movieOutput()" >Get Movie!</button>
+  </div>
+
+
+  <div id="remover" v-if="removeIf">
+    <img id = "movie-poster" src =" " ref= "poster"/>
+    <p id="movie-title" ref= "title"></p>
+    <p id="movie-overview" ref= "overview"></p>
+    <p id="movie-release-date" ref= "releaseDate"></p>
+    <p id="movie-genre" ref= "genre"></p>
+    <p id="movie-revenue" ref= "revenue"></p>
+    <p id="movie-budget" ref= "budget"></p>
+    <p id="movie-runtime" ref= "runtime" ></p>
+    <p id="movie-tagline" ref= "tagline"></p>
+    <a id="movie-homepage" target="_blank" href= " " ref= "homepage"></a>
+    <iframe id ="movie-trailer" src=" " ref= "trailer"></iframe>
+    <p id ="movie-ranking" ref= "ranking"></p>
+
+    <div v-if="collectionTF">
+    <p id ="movie-collection" ref="collection"></p>
+    <img id="movie-collection-poster" src = " " ref="collectionPoster" />
     </div>
+  </div>
+
+</div>
+
 </template>
 
 <style scoped>
-* {
-  font-family: "Berkshire Swash", cursive;
-}
 
-body {
-  background-color: #400000;
-  margin: 0px 0px 0px 0px;
-}
 
 /* #topdiv {
   background-color: #C9A9A6;
@@ -230,7 +234,7 @@ body {
   font-family: "Berkshire Swash", cursive;
   font-size: 70px;
   margin-left: 5px;
-  color:#14bebb;
+  color: #14bebb;
 }
 
 #moviesdropdown {
@@ -275,6 +279,8 @@ body {
   grid-template-rows: 100px 30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;
+
+  overflow: auto;
 }
 
 #movie-title {
@@ -289,6 +295,7 @@ body {
   font-family: "Bungee Inline", cursive;
   /* font-family: 'Fredericka the Great', cursive; */
   /* font-family: 'Metamorphous', cursive; */
+  /* margin:0; */
 }
 #movie-poster {
   grid-row: 2/5;
@@ -377,9 +384,9 @@ body {
   grid-column: 2/3;
   grid-row: 9/10;
   justify-self: end;
-align-self: center; 
- font-size: 1.8rem;
- margin-right: 5px;
+  align-self: center;
+  font-size: 1.8rem;
+  margin-right: 5px;
 }
 
 #movie-collection-poster {
@@ -387,32 +394,40 @@ align-self: center;
   grid-row: 9/10;
   justify-self: start;
   aspect-ratio: 2/3;
-  width:30%;
+  width: 30%;
 }
 
 @keyframes ani {
-  0%   {color:red; }
-  15%  {color:rgb(222, 128, 22); }
+  0% {
+    color: red;
+  }
+  15% {
+    color: rgb(222, 128, 22);
+  }
 
-   /* 30%  {color:blue; } */
-  45%  {color:green;}
-  50% {color:black}
+  /* 30%  {color:blue; } */
+  45% {
+    color: green;
+  }
+  50% {
+    color: black;
+  }
   /* 60%{color:red; } */
   /* 75%  {color:violet; } */
-  80% {color: aqua;}
+  80% {
+    color: aqua;
+  }
   /* 100% {color:bisque;}  */
-
 }
-
 .animate {
- animation-name: ani;
- animation-duration: 2s;
- animation-iteration-count: infinite;
+  animation-name: ani;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
 }
 
 #hiddenone {
   position: absolute;
-  top:1px;
+  top: 1px;
   left: 2px;
   background-color: #400000;
 }
