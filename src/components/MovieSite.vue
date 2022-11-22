@@ -20,10 +20,13 @@ let ranking = ref();
 let collection = ref();
 let collectionPoster = ref();
 let trailer = ref();
-let collectionTF = ref(false);
+let collectionTF = ref();
+let titleAnimation = ref();
 
 async function movieOutput() {
   removeIf.value = true;
+  collectionTF.value = true;
+  titleAnimation.value = "animate";
 
   video = await axios.get(`https://api.themoviedb.org/3/movie/${movies}`, {
     params: {
@@ -35,10 +38,6 @@ async function movieOutput() {
   trailers = video.data.videos.results.filter(
     (trailer) => trailer.type === "Trailer"
   );
-  if (video.data.belongs_to_collection) {
-     collectionTF.value = true;
-    }
-
 
   title.value.innerHTML = `${video.data.title} `;
   poster.value.src = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
@@ -54,15 +53,18 @@ async function movieOutput() {
   ranking.value.innerHTML = `Ranking: ${video.data.vote_average}/10`;
   trailer.value.src = `https://www.youtube.com/embed/${trailers[0].key}`;
 
-
-  collection.value.innerHTML = `${video.data.belongs_to_collection.name}`;
-  collectionPoster.value.src = `https://image.tmdb.org/t/p/w500${video.data.belongs_to_collection.poster_path}`;
+  if (video.data.belongs_to_collection) {
+    collection.value.innerHTML = `${video.data.belongs_to_collection.name}`;
+    collectionPoster.value.src = `https://image.tmdb.org/t/p/w500${video.data.belongs_to_collection.poster_path}`;
+  } else {
+    collectionTF.value = false;
+  }
 }
 </script>
 
 <template>
   <div id="main-div">
-    <h1 id="pagetitle">Movie Finder</h1>
+    <h1 id="pagetitle" :class="titleAnimation">Movie Finder</h1>
     <p id="intro">See the drop down below to select a movie</p>
     <form>
       <label id="moviesdropdownlabel" for="moviesdropdown"
@@ -86,7 +88,7 @@ async function movieOutput() {
     </div>
 
     <div id="remover" v-if="removeIf">
-      <img id="movie-poster" src=" " ref="poster" />
+      <img id="movie-poster" src="" ref="poster" />
       <p id="movie-title" ref="title"></p>
       <p id="movie-overview" ref="overview"></p>
       <p id="movie-release-date" ref="releaseDate"></p>
@@ -98,8 +100,13 @@ async function movieOutput() {
       <a id="movie-homepage" target="_blank" href=" " ref="homepage"></a>
       <iframe id="movie-trailer" src=" " ref="trailer"></iframe>
       <p id="movie-ranking" ref="ranking"></p>
-      <p id="movie-collection" ref="collection" v-if="collectionTF"></p>
-      <img id="movie-collection-poster" src=" " ref="collectionPoster" v-if="collectionTF" />
+      <p v-if="collectionTF" id="movie-collection" ref="collection"></p>
+      <img
+        v-if="collectionTF"
+        id="movie-collection-poster"
+        src=" "
+        ref="collectionPoster"
+      />
     </div>
   </div>
 </template>
@@ -175,30 +182,24 @@ async function movieOutput() {
   grid-template-rows: 100px 30px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-template-columns: repeat(4, 1fr);
   justify-items: center;
-
-  overflow: auto;
 }
 
 #movie-title {
   grid-column: 2/5;
   text-align: center;
   color: #1c2e4a;
-  /* text-shadow: 3px 3px #FE828C; */
   text-shadow: 3px 3px #daab0f;
   font-size: 3.5rem;
   line-height: 1.02;
   align-self: center;
   font-family: "Bungee Inline", cursive;
-  /* font-family: 'Fredericka the Great', cursive; */
-  /* font-family: 'Metamorphous', cursive; */
-  /* margin:0; */
+  font-weight: bold;
 }
 #movie-poster {
   grid-row: 2/5;
   aspect-ratio: 1/3;
   border: 4px solid rgb(135, 14, 14);
   margin-left: 2px;
-  /* put a margin on the poster */
 }
 
 #movie-poster:hover {
@@ -285,6 +286,7 @@ async function movieOutput() {
   align-self: center;
   font-size: 1.8rem;
   margin-right: 5px;
+  border: 0px;
 }
 
 #movie-collection-poster {
