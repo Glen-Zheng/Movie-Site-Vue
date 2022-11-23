@@ -39,7 +39,7 @@ async function movieOutput() {
     (trailer) => trailer.type === "Trailer"
   );
 
-  title.value.innerHTML = `${video.data.title} `;
+  title.value = `${video.data.title} `;
   poster.value.src = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
   overview.value.innerHTML = `Overview: ${video.data.overview}`;
   releaseDate.value.innerHTML = `Release Date: ${video.data.release_date}`;
@@ -89,7 +89,8 @@ async function movieOutput() {
 
     <div id="remover" v-if="removeIf">
       <img id="movie-poster" src="" ref="poster" />
-      <p id="movie-title" ref="title"></p>
+      <p id="movie-title" >{{title}}</p>
+      <!-- ref="title" -->
       <p id="movie-overview" ref="overview"></p>
       <p id="movie-release-date" ref="releaseDate"></p>
       <p id="movie-genre" ref="genre"></p>
