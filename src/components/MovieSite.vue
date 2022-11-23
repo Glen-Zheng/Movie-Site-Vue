@@ -24,9 +24,13 @@ let collectionTF = ref();
 let titleAnimation = ref();
 
 async function movieOutput() {
-  removeIf.value = true;
+  if (movies) {
+    removeIf.value = true;
+  }
+  if (removeIf.value) {
+    titleAnimation.value = "animate";
+  }
   collectionTF.value = true;
-  titleAnimation.value = "animate";
 
   video = await axios.get(`https://api.themoviedb.org/3/movie/${movies}`, {
     params: {
@@ -40,22 +44,21 @@ async function movieOutput() {
   );
 
   title.value = `${video.data.title} `;
-  poster.value.src = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
-  overview.value.innerHTML = `Overview: ${video.data.overview}`;
-  releaseDate.value.innerHTML = `Release Date: ${video.data.release_date}`;
-  genre.value.innerHTML = `Genre: ${video.data.genres[0].name}`;
-  revenue.value.innerHTML = `Revenue: $${video.data.revenue}`;
-  budget.value.innerHTML = `Budget: $${video.data.budget}`;
-  runtime.value.innerHTML = `Movie Runtime: ${video.data.runtime} minutes`;
-  tagline.value.innerHTML = `${video.data.tagline}`;
-  homepage.value.href = `${video.data.homepage}`;
-  homepage.value.innerHTML = "Movie Homepage";
-  ranking.value.innerHTML = `Ranking: ${video.data.vote_average}/10`;
-  trailer.value.src = `https://www.youtube.com/embed/${trailers[0].key}`;
+  poster.value = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
+  overview.value = `Overview: ${video.data.overview}`;
+  releaseDate.value = `Release Date: ${video.data.release_date}`;
+  genre.value = `Genre: ${video.data.genres[0].name}`;
+  revenue.value = `Revenue: $${video.data.revenue}`;
+  budget.value = `Budget: $${video.data.budget}`;
+  runtime.value = `Movie Runtime: ${video.data.runtime} minutes`;
+  tagline.value = `${video.data.tagline}`;
+  homepage.value = `${video.data.homepage}`;
+  ranking.value = `Ranking: ${video.data.vote_average}/10`;
+  trailer.value = `https://www.youtube.com/embed/${trailers[0].key}`;
 
   if (video.data.belongs_to_collection) {
-    collection.value.innerHTML = `${video.data.belongs_to_collection.name}`;
-    collectionPoster.value.src = `https://image.tmdb.org/t/p/w500${video.data.belongs_to_collection.poster_path}`;
+    collection.value = `${video.data.belongs_to_collection.name}`;
+    collectionPoster.value = `https://image.tmdb.org/t/p/w500${video.data.belongs_to_collection.poster_path}`;
   } else {
     collectionTF.value = false;
   }
@@ -88,25 +91,23 @@ async function movieOutput() {
     </div>
 
     <div id="remover" v-if="removeIf">
-      <img id="movie-poster" src="" ref="poster" />
-      <p id="movie-title" >{{title}}</p>
-      <!-- ref="title" -->
-      <p id="movie-overview" ref="overview"></p>
-      <p id="movie-release-date" ref="releaseDate"></p>
-      <p id="movie-genre" ref="genre"></p>
-      <p id="movie-revenue" ref="revenue"></p>
-      <p id="movie-budget" ref="budget"></p>
-      <p id="movie-runtime" ref="runtime"></p>
-      <p id="movie-tagline" ref="tagline"></p>
-      <a id="movie-homepage" target="_blank" href=" " ref="homepage"></a>
-      <iframe id="movie-trailer" src=" " ref="trailer"></iframe>
-      <p id="movie-ranking" ref="ranking"></p>
-      <p v-if="collectionTF" id="movie-collection" ref="collection"></p>
+      <img id="movie-poster" :src="poster" />
+      <p id="movie-title">{{ title }}</p>
+      <p id="movie-overview">{{ overview }}</p>
+      <p id="movie-release-date">{{ releaseDate }}</p>
+      <p id="movie-genre">{{ genre }}</p>
+      <p id="movie-revenue">{{ revenue }}</p>
+      <p id="movie-budget">{{ budget }}</p>
+      <p id="movie-runtime">{{ runtime }}</p>
+      <p id="movie-tagline">{{ tagline }}</p>
+      <a id="movie-homepage" target="_blank" :href="homepage">Movie Homepage</a>
+      <iframe id="movie-trailer" :src="trailer"></iframe>
+      <p id="movie-ranking">{{ ranking }}</p>
+      <p v-if="collectionTF" id="movie-collection">{{ collection }}</p>
       <img
         v-if="collectionTF"
         id="movie-collection-poster"
-        src=" "
-        ref="collectionPoster"
+        :src="collectionPoster"
       />
     </div>
   </div>
