@@ -2,8 +2,8 @@
 import { ref } from "vue";
 import axios from "axios";
 
-let movies;
-let video = ref();
+let movies =  ref(null);
+let video;
 let removeIf = ref(false);
 let trailers = ref();
 let title = ref();
@@ -24,7 +24,7 @@ let collectionTF = ref();
 let titleAnimation = ref();
 
 async function movieOutput() {
-  if (movies) {
+  if (movies.value) {
     removeIf.value = true;
   }
   if (removeIf.value) {
@@ -32,7 +32,7 @@ async function movieOutput() {
   }
   collectionTF.value = true;
 
-  video = await axios.get(`https://api.themoviedb.org/3/movie/${movies}`, {
+  video = await axios.get(`https://api.themoviedb.org/3/movie/${movies.value}`, {
     params: {
       api_key: "da6aeec5bd0d488feeebd8b57deda080",
       append_to_response: "videos",
