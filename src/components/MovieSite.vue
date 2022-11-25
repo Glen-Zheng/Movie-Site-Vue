@@ -3,21 +3,11 @@ import { ref } from "vue";
 import axios from "axios";
 
 let movies =  ref(null);
-let video;
+let video = ref();
 let removeIf = ref(false);
 let trailers = ref();
-let title = ref();
 let poster = ref();
-let overview = ref();
-let releaseDate = ref();
-let genre = ref();
-let revenue = ref();
-let budget = ref();
-let runtime = ref();
-let tagline = ref();
 let homepage = ref();
-let ranking = ref();
-let collection = ref();
 let collectionPoster = ref();
 let trailer = ref();
 let collectionTF = ref();
@@ -32,33 +22,23 @@ async function movieOutput() {
   }
   collectionTF.value = true;
 
-  video = await axios.get(`https://api.themoviedb.org/3/movie/${movies.value}`, {
+  video.value = await axios.get(`https://api.themoviedb.org/3/movie/${movies.value}`, {
     params: {
       api_key: "da6aeec5bd0d488feeebd8b57deda080",
       append_to_response: "videos",
       include_adult: false,
     },
   });
-  trailers = video.data.videos.results.filter(
+  trailers = video.value.data.videos.results.filter(
     (trailer) => trailer.type === "Trailer"
   );
 
-  title.value = `${video.data.title} `;
-  poster.value = `https://image.tmdb.org/t/p/w500${video.data.poster_path}`;
-  overview.value = `Overview: ${video.data.overview}`;
-  releaseDate.value = `Release Date: ${video.data.release_date}`;
-  genre.value = `Genre: ${video.data.genres[0].name}`;
-  revenue.value = `Revenue: $${video.data.revenue}`;
-  budget.value = `Budget: $${video.data.budget}`;
-  runtime.value = `Movie Runtime: ${video.data.runtime} minutes`;
-  tagline.value = `${video.data.tagline}`;
-  homepage.value = `${video.data.homepage}`;
-  ranking.value = `Ranking: ${video.data.vote_average}/10`;
+  poster.value = `https://image.tmdb.org/t/p/w500${video.value.data.poster_path}`;
+  homepage.value = `${video.value.data.homepage}`;
   trailer.value = `https://www.youtube.com/embed/${trailers[0].key}`;
 
-  if (video.data.belongs_to_collection) {
-    collection.value = `${video.data.belongs_to_collection.name}`;
-    collectionPoster.value = `https://image.tmdb.org/t/p/w500${video.data.belongs_to_collection.poster_path}`;
+  if (video.value.data.belongs_to_collection) {
+    collectionPoster.value = `https://image.tmdb.org/t/p/w500${video.value.data.belongs_to_collection.poster_path}`;
   } else {
     collectionTF.value = false;
   }
@@ -92,18 +72,18 @@ async function movieOutput() {
 
     <div id="remover" v-if="removeIf">
       <img id="movie-poster" :src="poster" />
-      <p id="movie-title">{{ title }}</p>
-      <p id="movie-overview">{{ overview }}</p>
-      <p id="movie-release-date">{{ releaseDate }}</p>
-      <p id="movie-genre">{{ genre }}</p>
-      <p id="movie-revenue">{{ revenue }}</p>
-      <p id="movie-budget">{{ budget }}</p>
-      <p id="movie-runtime">{{ runtime }}</p>
-      <p id="movie-tagline">{{ tagline }}</p>
+      <p id="movie-title">{{ video.data.title }}</p>
+      <p id="movie-overview">{{ video.data.overview }}</p>
+      <p id="movie-release-date">{{ video.data.release_date }}</p>
+      <p id="movie-genre">{{ video.data.genres[0].name }}</p>
+      <p id="movie-revenue">{{ video.data.revenue }}</p>
+      <p id="movie-budget">{{ video.data.budget }}</p>
+      <p id="movie-runtime">{{ video.data.runtime }}</p>
+      <p id="movie-tagline">{{ video.data.tagline }}</p>
       <a id="movie-homepage" target="_blank" :href="homepage">Movie Homepage</a>
       <iframe id="movie-trailer" :src="trailer"></iframe>
-      <p id="movie-ranking">{{ ranking }}</p>
-      <p v-if="collectionTF" id="movie-collection">{{ collection }}</p>
+      <p id="movie-ranking">{{ video.data.vote_average }}</p>
+      <p v-if="collectionTF" id="movie-collection">{{ video.data.belongs_to_collection.name}}</p>
       <img
         v-if="collectionTF"
         id="movie-collection-poster"
